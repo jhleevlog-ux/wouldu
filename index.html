@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>청소당번 뽑기</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .result-box {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            min-height: 70px;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .ball {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .placeholder {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🧹 청소당번 뽑기</h1>
+        <p class="subtitle">1번부터 30번 학생 중 5명을 무작위로 추첨합니다.</p>
+        
+        <div class="result-box" id="resultBox">
+            <span class="placeholder">버튼을 눌러 당번을 뽑아주세요!</span>
+        </div>
+
+        <button onclick="pickCleaners()">당번 추첨하기</button>
+    </div>
+
+    <script>
+        function pickCleaners() {
+            const totalStudents = 30;
+            const pickCount = 5;
+            const numbers = Array.from({ length: totalStudents }, (_, i) => i + 1);
+            
+            // 피셔-예이츠 셔플 알고리즘으로 무작위 섞기
+            for (let i = numbers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+            }
+
+            // 앞에서부터 5명 추출 후 오름차순 정렬
+            const selected = numbers.slice(0, pickCount).sort((a, b) => a - b);
+
+            // 화면 표시
+            const resultBox = document.getElementById('resultBox');
+            resultBox.innerHTML = '';
+
+            selected.forEach((num, index) => {
+                setTimeout(() => {
+                    const ball = document.createElement('div');
+                    ball.className = 'ball';
+                    ball.innerText = `${num}번`;
+                    resultBox.appendChild(ball);
+                }, index * 100); // 0.1초 간격으로 팝업 애니메이션 효과
+            });
+        }
+    </script>
+
+</body>
+</html>
